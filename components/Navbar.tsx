@@ -124,22 +124,25 @@ export default function Navbar() {
       >
         <Link
           href="#"
-          className="hover:underline text-xl font-medium cursor-pointer"
+          className="relative hover:text-[#32008A] transition-colors duration-300 text-xl font-medium cursor-pointer group"
         >
-          whitelist
+          <span>whitelist</span>
+          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#32008A] transition-all duration-300 group-hover:w-full"></span>
         </Link>
         <Link
           href="#"
-          className="hover:underline text-xl font-medium cursor-pointer"
+          className="relative hover:text-[#32008A] transition-colors duration-300 text-xl font-medium cursor-pointer group"
         >
-          docs
+          <span>docs</span>
+          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#32008A] transition-all duration-300 group-hover:w-full"></span>
         </Link>
         {account && (
           <Link
             href="/profile"
-            className="hover:underline text-xl font-medium cursor-pointer"
+            className="relative hover:text-[#32008A] transition-colors duration-300 text-xl font-medium cursor-pointer group"
           >
-            profile
+            <span>profile</span>
+            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#32008A] transition-all duration-300 group-hover:w-full"></span>
           </Link>
         )}
         {account ? (
