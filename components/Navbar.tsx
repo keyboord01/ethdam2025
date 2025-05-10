@@ -149,15 +149,15 @@ export default function Navbar() {
             )}
             <div className="relative group">
               <button
-                className="ml-2 px-4 py-2 border rounded-lg bg-[#F5F5F5] hover:bg-red-50 hover:text-red-600 transition cursor-pointer flex items-center gap-2"
+                className="ml-2 px-4 pb-2 pt-1 border rounded-lg bg-[#F5F5F5] hover:bg-red-50 hover:text-red-600 transition cursor-pointer flex items-center gap-2"
                 onClick={disconnectWallet}
               >
                 <span>{formatAddress(account)}</span>
                 <div className="relative w-4 h-4">
-                  <div className="absolute top-1 left-1 inset-0 transition-opacity duration-200 group-hover:opacity-0 animate-pulse">
+                  <div className="absolute top-1.5 left-1 inset-0 transition-opacity duration-200 group-hover:opacity-0 animate-pulse">
                     <ConnectedDot />
                   </div>
-                  <div className="absolute inset-0 transition-opacity duration-200 opacity-0 group-hover:opacity-100">
+                  <div className="absolute top-0.5 inset-0 transition-opacity duration-200 opacity-0 group-hover:opacity-100">
                     <LogoutIcon />
                   </div>
                 </div>
@@ -169,7 +169,7 @@ export default function Navbar() {
           </div>
         ) : (
           <button
-            className="ml-2 px-4 py-2 border rounded-lg bg-[#F5F5F5] hover:bg-gray-100 transition cursor-pointer font-medium"
+            className="ml-2 px-4 4 pb-2 pt-1 border rounded-lg bg-[#F5F5F5] hover:bg-gray-100 transition cursor-pointer font-medium"
             onClick={connectWallet}
           >
             Connect Wallet

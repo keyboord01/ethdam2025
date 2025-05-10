@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 interface FeatureCardProps {
   number: string;
   title: string;
@@ -12,17 +13,23 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
   className = "",
 }) => {
   return (
-    <div className={`bg-[#D7CEFF] p-8 sm:p-10 ${className}`}>
-      <div className="text-8xl sm:text-8xl font-extrabold text-gray-400 opacity-50 mb-3 sm:mb-4">
-        {number}
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className={`bg-[#bababa] p-8 rounded-lg ${className}`}
+    >
+      <div className="flex items-center mb-6">
+        <div className="text-6xl font-extrabold text-[#242919] opacity-30 mr-4">
+          {number}
+        </div>
+        <div className="h-px flex-grow bg-[#242919] opacity-20"></div>
       </div>
-      <div className="font-bold text-xl sm:text-4xl mb-2 sm:mb-3 text-black">
-        {title}
-      </div>
-      <div className="text-xl sm:text-base text-neutral-700 leading-relaxed">
-        {description}
-      </div>
-    </div>
+
+      <h3 className="font-bold text-2xl mb-4 text-black">{title}</h3>
+
+      <p className="text-lg text-neutral-700">{description}</p>
+    </motion.div>
   );
 };
 
