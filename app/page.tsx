@@ -55,9 +55,9 @@ export default function Home() {
                   initial={{ width: 0 }}
                   animate={{ width: "auto" }}
                   transition={{
-                    duration: 0.6,
+                    duration: 0.2,
                     ease: "linear",
-                    delay: 0.1,
+                    delay: 0.22,
                   }}
                 >
                   <input
