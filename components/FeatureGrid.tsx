@@ -3,8 +3,10 @@
 import Link from "next/link";
 import FeatureCard from "./FeatureCard";
 import { motion } from "framer-motion";
+import { useWallet } from "./WalletProvider";
 
 const FeatureGrid = () => {
+  const { account } = useWallet();
   const features = [
     {
       number: "01",
@@ -46,7 +48,9 @@ const FeatureGrid = () => {
 
   return (
     <motion.div
-      className="max-w-6xl mx-auto"
+      className={`max-w-6xl mx-auto ${
+        account ? "md:mt-36 mt-48" : "md:mt-0 mt-18"
+      } transition-all duration-300`}
       variants={containerVariants}
       initial="hidden"
       animate="show"

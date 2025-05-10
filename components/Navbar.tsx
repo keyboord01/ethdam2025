@@ -53,7 +53,7 @@ const MenuIcon = ({ isOpen }: { isOpen: boolean }) => (
 );
 
 export default function Navbar() {
-  const { account, connectWallet, signer } = useWallet();
+  const { account, connectWallet, signer, disconnectWallet } = useWallet();
   const [menuOpen, setMenuOpen] = useState(false);
   const [isValidNetwork, setIsValidNetwork] = useState(true);
 
@@ -74,8 +74,8 @@ export default function Navbar() {
     checkNetwork();
   }, [signer]);
 
-  const disconnectWallet = () => {
-    window.location.reload();
+  const handleDisconnect = () => {
+    disconnectWallet();
   };
 
   const formatAddress = (addr: string) => {
@@ -153,7 +153,7 @@ export default function Navbar() {
             <div className="relative group">
               <button
                 className="ml-2 px-4 pb-2 pt-1 border rounded-lg bg-[#F5F5F5] hover:bg-red-50 hover:text-red-600 transition cursor-pointer flex items-center gap-2"
-                onClick={disconnectWallet}
+                onClick={handleDisconnect}
               >
                 <span>{formatAddress(account)}</span>
                 <div className="relative w-4 h-4">
