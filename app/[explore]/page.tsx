@@ -6,7 +6,6 @@ import {
   FaSpinner,
   FaUserCircle,
   FaThumbsUp,
-  FaThumbsDown,
   FaTimes,
 } from "react-icons/fa";
 import { useParams } from "next/navigation";
@@ -42,12 +41,9 @@ export default function ExplorePage() {
   const [isTransactionPending, setIsTransactionPending] = useState(false);
   const { account, signer } = useWallet();
   const [showTrustModal, setShowTrustModal] = useState(false);
-  const [showDontTrustModal, setShowDontTrustModal] = useState(false);
   const [days, setDays] = useState<number>(0);
   const [hours, setHours] = useState<number>(0);
-  const [trustState, setTrustState] = useState<"trusted" | "untrusted" | null>(
-    null
-  );
+  const [trustState, setTrustState] = useState<"trusted" | null>(null);
   const [userData, setUserData] = useState({
     name: generateRandomName(),
     wallet: (params?.explore as string) || "",
@@ -87,12 +83,8 @@ export default function ExplorePage() {
     setShowTrustModal(true);
   };
 
-  const handleDontTrustClick = () => {
-    setShowDontTrustModal(true);
-  };
-
-  const simulateTransaction = async (isTrust: boolean) => {
-    if (!signer || !account) return;
+  const handleTrustSubmit = async () => {
+    if (!userData.wallet || (!days && !hours)) return;
 
     try {
       setIsTransactionPending(true);
@@ -101,16 +93,14 @@ export default function ExplorePage() {
         from: account,
         to: "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
         value: "0x0",
-        data: isTrust ? "0x1234" : "0x5678",
+        data: "0x1234",
       };
 
       await signer.sendTransaction(transaction);
-
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      setTrustState(isTrust ? "trusted" : "untrusted");
+      setTrustState("trusted");
       setShowTrustModal(false);
-      setShowDontTrustModal(false);
       setDays(0);
       setHours(0);
     } catch (error) {
@@ -120,19 +110,8 @@ export default function ExplorePage() {
     }
   };
 
-  const handleTrustSubmit = async () => {
-    if (!userData.wallet || (!days && !hours)) return;
-    await simulateTransaction(true);
-  };
-
-  const handleDontTrustSubmit = async () => {
-    if (!userData.wallet || (!days && !hours)) return;
-    await simulateTransaction(false);
-  };
-
   const closeModal = () => {
     setShowTrustModal(false);
-    setShowDontTrustModal(false);
     setDays(0);
     setHours(0);
   };
@@ -143,13 +122,11 @@ export default function ExplorePage() {
     return "text-red-500";
   };
 
-  const TrustModal = ({ isTrust = true }) => (
+  const TrustModal = () => (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl">
         <div className="flex justify-between items-center mb-6">
-          <h3 className="text-2xl font-bold">
-            {isTrust ? "Trust this Wallet" : "Don't Trust this Wallet"}
-          </h3>
+          <h3 className="text-2xl font-bold">Trust this Wallet</h3>
           <button
             onClick={closeModal}
             className="text-gray-500 hover:text-gray-800"
@@ -199,23 +176,17 @@ export default function ExplorePage() {
         </div>
 
         <button
-          onClick={isTrust ? handleTrustSubmit : handleDontTrustSubmit}
+          onClick={handleTrustSubmit}
           disabled={(!days && !hours) || isTransactionPending}
-          className={`w-full p-3 rounded-lg font-medium text-white flex items-center justify-center gap-2 ${
-            isTrust
-              ? "bg-green-500 hover:bg-green-600"
-              : "bg-red-500 hover:bg-red-600"
-          } disabled:opacity-50 transition-colors`}
+          className="w-full p-3 rounded-lg font-medium text-white flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 disabled:opacity-50 transition-colors"
         >
           {isTransactionPending ? (
             <FaSpinner className="animate-spin" />
           ) : (
             <>
-              {isTrust ? <FaThumbsUp /> : <FaThumbsDown />}
+              <FaThumbsUp />
               <span>
-                {isTransactionPending
-                  ? "Confirm in MetaMask..."
-                  : `Confirm ${isTrust ? "Trust" : "Don't Trust"}`}
+                {isTransactionPending ? "Confirming..." : "Confirm Trust"}
               </span>
             </>
           )}
@@ -300,8 +271,6 @@ export default function ExplorePage() {
                 className={`flex items-center gap-3 ${
                   trustState === "trusted"
                     ? "bg-green-100 border-green-500 text-green-600"
-                    : trustState === "untrusted"
-                    ? "bg-gray-100 border-gray-300 text-gray-400"
                     : "bg-white border-green-500 text-green-600 hover:bg-green-50"
                 } border-2 px-6 py-3 rounded-xl transition-colors disabled:opacity-50 shadow-md`}
               >
@@ -310,34 +279,17 @@ export default function ExplorePage() {
                   {trustState === "trusted" ? "Trusted" : "Trust"}
                 </span>
               </button>
-              <button
-                onClick={handleDontTrustClick}
-                disabled={loading || trustState !== null}
-                className={`flex items-center gap-3 ${
-                  trustState === "untrusted"
-                    ? "bg-red-100 border-red-500 text-red-600"
-                    : trustState === "trusted"
-                    ? "bg-gray-100 border-gray-300 text-gray-400"
-                    : "bg-white border-red-500 text-red-600 hover:bg-red-50"
-                } border-2 px-6 py-3 rounded-xl transition-colors disabled:opacity-50 shadow-md`}
-              >
-                <FaThumbsDown className="text-2xl" />
-                <span className="text-xl font-medium">
-                  {trustState === "untrusted" ? "Untrusted" : "Don't Trust"}
-                </span>
-              </button>
             </div>
           ) : (
-            <div className="flex items-center justify-start ">
+            <div className="flex items-center justify-start">
               <div className="text-2xl text-gray-500">
-                Connect your wallet to trust or untrust a wallet
+                Connect your wallet to trust a wallet
               </div>
             </div>
           )}
         </div>
 
-        {showTrustModal && <TrustModal isTrust={true} />}
-        {showDontTrustModal && <TrustModal isTrust={false} />}
+        {showTrustModal && <TrustModal />}
       </div>
     </div>
   );

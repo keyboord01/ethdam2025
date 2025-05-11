@@ -130,7 +130,7 @@ export default function Navbar() {
           <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#32008A] transition-all duration-300 group-hover:w-full"></span>
         </Link>
         <Link
-          href="#"
+          href="https://github.com/berkay1532/ZenCycleBlockchainScore"
           className="relative hover:text-[#32008A] transition-colors duration-300 text-xl font-medium cursor-pointer group"
         >
           <span>docs</span>

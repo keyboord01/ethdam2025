@@ -1,7 +1,13 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { ReactNode, createContext, useContext, useState } from "react";
+import {
+  ReactNode,
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+} from "react";
 import { BrowserProvider } from "ethers";
 import { wrapEthersSigner } from "@oasisprotocol/sapphire-ethers-v6";
 
@@ -26,6 +32,41 @@ export function useWallet() {
 export default function WalletProvider({ children }: { children: ReactNode }) {
   const [account, setAccount] = useState<string | null>(null);
   const [signer, setSigner] = useState<any | null>(null);
+
+  useEffect(() => {
+    const loadPersistedWallet = async () => {
+      const persistedAccount = localStorage.getItem("walletAccount");
+      if (persistedAccount) {
+        try {
+          const ethereum = (window as any).ethereum;
+          if (!ethereum) {
+            localStorage.removeItem("walletAccount");
+            return;
+          }
+
+          const accounts = await ethereum.request({ method: "eth_accounts" });
+          if (
+            accounts.length > 0 &&
+            accounts[0].toLowerCase() === persistedAccount.toLowerCase()
+          ) {
+            const provider = new BrowserProvider(ethereum);
+            const wrappedSigner = await wrapEthersSigner(
+              await provider.getSigner()
+            );
+            setAccount(accounts[0]);
+            setSigner(wrappedSigner);
+          } else {
+            localStorage.removeItem("walletAccount");
+          }
+        } catch (error) {
+          console.error("Failed to restore wallet connection:", error);
+          localStorage.removeItem("walletAccount");
+        }
+      }
+    };
+
+    loadPersistedWallet();
+  }, []);
 
   async function connectWallet() {
     console.log("[Wallet] Starting connection process...");
@@ -83,6 +124,7 @@ export default function WalletProvider({ children }: { children: ReactNode }) {
 
       setAccount(accounts[0]);
       setSigner(wrappedSigner);
+      localStorage.setItem("walletAccount", accounts[0]);
     } catch (error) {
       console.error("Connection failed:", error);
       alert(
@@ -96,7 +138,34 @@ export default function WalletProvider({ children }: { children: ReactNode }) {
   const disconnectWallet = () => {
     setAccount(null);
     setSigner(null);
+    localStorage.removeItem("walletAccount");
   };
+
+  useEffect(() => {
+    const ethereum = (window as any).ethereum;
+    if (!ethereum) return;
+
+    const handleAccountsChanged = (accounts: string[]) => {
+      if (accounts.length === 0) {
+        disconnectWallet();
+      } else if (accounts[0].toLowerCase() !== account?.toLowerCase()) {
+        setAccount(accounts[0]);
+        localStorage.setItem("walletAccount", accounts[0]);
+      }
+    };
+
+    const handleChainChanged = () => {
+      window.location.reload();
+    };
+
+    ethereum.on("accountsChanged", handleAccountsChanged);
+    ethereum.on("chainChanged", handleChainChanged);
+
+    return () => {
+      ethereum.removeListener("accountsChanged", handleAccountsChanged);
+      ethereum.removeListener("chainChanged", handleChainChanged);
+    };
+  }, [account]);
 
   return (
     <WalletContext.Provider

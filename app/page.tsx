@@ -3,7 +3,6 @@ import Navbar from "@/components/Navbar";
 import Image from "next/image";
 import heroCorner from "@/assets/hero_corner.svg";
 import Arrow from "@/assets/arrow.svg";
-import Link from "next/link";
 import FeatureGrid from "@/components/FeatureGrid";
 import Footer from "@/components/footer";
 import { useState, useEffect } from "react";
@@ -13,16 +12,45 @@ import { motion, AnimatePresence } from "framer-motion";
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
-  const { account } = useWallet();
+  const { account, signer, connectWallet } = useWallet();
   const [isSearchVisible, setIsSearchVisible] = useState(false);
+  const [isTransactionPending, setIsTransactionPending] = useState(false);
 
   useEffect(() => {
     setIsSearchVisible(!!account);
   }, [account]);
+
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (searchQuery.trim()) {
       window.location.href = `/${searchQuery.trim()}`;
+    }
+  };
+
+  const handleShowScore = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!signer || !account) {
+      connectWallet();
+    }
+
+    try {
+      setIsTransactionPending(true);
+
+      const transaction = {
+        from: account,
+        to: "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
+        value: "0x0",
+        data: "0x1234",
+      };
+
+      await signer.sendTransaction(transaction);
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      window.location.href = "/profile";
+    } catch (error) {
+      console.error("Transaction failed:", error);
+    } finally {
+      setIsTransactionPending(false);
     }
   };
 
@@ -97,11 +125,12 @@ export default function Home() {
         )}
         <div className="flex absolute bottom-0 right-0 translate-y-18">
           <div className="relative bg-[#CDFF75] flex items-center px-8 py-4 rounded-br-3xl w-full md:w-auto">
-            <Link
-              href="/profile"
-              className="text-2xl flex text-[#32008a] items-center gap-2 h-[42.5px] cursor-pointer group hover:translate-x-1 transition-transform duration-300"
+            <button
+              onClick={handleShowScore}
+              disabled={isTransactionPending}
+              className="text-2xl flex text-[#32008a] items-center gap-2 h-[42.5px] cursor-pointer group hover:translate-x-1 transition-transform duration-300 disabled:opacity-50"
             >
-              show your score
+              {isTransactionPending ? "confirming..." : "show your score"}
               <Image
                 src={Arrow}
                 alt="Logo"
@@ -109,7 +138,7 @@ export default function Home() {
                 height={12}
                 className="w-4 h-4 object-contain group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform duration-300"
               />
-            </Link>
+            </button>
             <Image
               src={heroCorner}
               alt="divbar Corner"

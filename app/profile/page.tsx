@@ -10,12 +10,42 @@ const MOCK_USER = {
   wallet: "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
   score: 86,
   connections: [
-    { wallet: "0x123f681646d4A755815f9CB19e1aCc8565a0c2AC", score: 92 },
-    { wallet: "0x456d35Cc6634C0532925a3b844Bc454e4438f44e", score: 78 },
-    { wallet: "0x789f681646d4A755815f9CB19e1aCc8565a0c2AC", score: 45 },
-    { wallet: "0xabc35Cc6634C0532925a3b844Bc454e4438f44e", score: 63 },
-    { wallet: "0xdef681646d4A755815f9CB19e1aCc8565a0c2AC", score: 88 },
-    { wallet: "0x12335Cc6634C0532925a3b844Bc454e4438f44e", score: 71 },
+    {
+      wallet: "0x123f681646d4A755815f9CB19e1aCc8565a0c2AC",
+      score: 92,
+      expirationDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), //
+      isTrusted: true,
+    },
+    {
+      wallet: "0x456d35Cc6634C0532925a3b844Bc454e4438f44e",
+      score: 78,
+      expirationDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+      isTrusted: true,
+    },
+    {
+      wallet: "0x789f681646d4A755815f9CB19e1aCc8565a0c2AC",
+      score: 45,
+      expirationDate: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
+      isTrusted: true,
+    },
+    {
+      wallet: "0xabc35Cc6634C0532925a3b844Bc454e4438f44e",
+      score: 63,
+      expirationDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+      isTrusted: true,
+    },
+    {
+      wallet: "0xdef681646d4A755815f9CB19e1aCc8565a0c2AC",
+      score: 88,
+      expirationDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
+      isTrusted: true,
+    },
+    {
+      wallet: "0x12335Cc6634C0532925a3b844Bc454e4438f44e",
+      score: 71,
+      expirationDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
+      isTrusted: true,
+    },
   ],
 };
 
@@ -137,15 +167,25 @@ export default function ProfilePage() {
                   <div className="flex-1 text-lg text-gray-600 truncate">
                     {conn.wallet}
                   </div>
-                  <div className="text-xl font-semibold mr-2 flex flex-row items-center gap-2">
-                    score:
-                    <span className={getScoreColorClass(conn.score)}>
-                      {loading ? (
-                        <FaSpinner className="animate-spin" />
-                      ) : (
-                        conn.score
-                      )}
-                    </span>
+                  <div className="flex flex-col items-end gap-1">
+                    <div className="text-xl font-semibold flex flex-row items-center gap-2">
+                      score:
+                      <span className={getScoreColorClass(conn.score)}>
+                        {loading ? (
+                          <FaSpinner className="animate-spin" />
+                        ) : (
+                          conn.score
+                        )}
+                      </span>
+                    </div>
+                    <div
+                      className={`text-sm ${
+                        conn.isTrusted ? "text-green-600" : "text-red-600"
+                      }`}
+                    >
+                      {conn.isTrusted ? "Trusted" : "Untrusted"} until{" "}
+                      {conn.expirationDate.toLocaleDateString()}
+                    </div>
                   </div>
                 </div>
               ))}
