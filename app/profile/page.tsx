@@ -6,16 +6,16 @@ import { FaCopy, FaSpinner, FaUserCircle } from "react-icons/fa";
 import { useWallet } from "@/components/WalletProvider";
 
 const MOCK_USER = {
-  name: "loremipsum",
-  wallet: "0xc1fgdhj7dhg7337b39753n7832923n94m",
+  name: "CryptoExplorer",
+  wallet: "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
   score: 86,
   connections: [
-    { wallet: "0xc1fgdhj7dhg7337b39753n7832923n94m", score: 27 },
-    { wallet: "0xc1fgdhj7dhg7337b39753n7832923n94m", score: 59 },
-    { wallet: "0xc1fgdhj7dhg7337b39753n7832923n94m", score: 78 },
-    { wallet: "0xc1fgdhj7dhg7337b39753n7832923n94m", score: 94 },
-    { wallet: "0xc1fgdhj7dhg7337b39753n7832923n94m", score: 33 },
-    { wallet: "0xc1fgdhj7dhg7337b39753n7832923n94m", score: 14 },
+    { wallet: "0x123f681646d4A755815f9CB19e1aCc8565a0c2AC", score: 92 },
+    { wallet: "0x456d35Cc6634C0532925a3b844Bc454e4438f44e", score: 78 },
+    { wallet: "0x789f681646d4A755815f9CB19e1aCc8565a0c2AC", score: 45 },
+    { wallet: "0xabc35Cc6634C0532925a3b844Bc454e4438f44e", score: 63 },
+    { wallet: "0xdef681646d4A755815f9CB19e1aCc8565a0c2AC", score: 88 },
+    { wallet: "0x12335Cc6634C0532925a3b844Bc454e4438f44e", score: 71 },
   ],
 };
 

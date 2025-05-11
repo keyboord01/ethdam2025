@@ -19,10 +19,11 @@ export default function Home() {
   useEffect(() => {
     setIsSearchVisible(!!account);
   }, [account]);
-
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Searching for:", searchQuery);
+    if (searchQuery.trim()) {
+      window.location.href = `/${searchQuery.trim()}`;
+    }
   };
 
   return (

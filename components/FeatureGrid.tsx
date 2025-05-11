@@ -19,7 +19,7 @@ const FeatureGrid = () => {
       number: "02",
       title: "Build A Safer Space",
       description:
-        "Free Network of scammers and bots, powered by ROFL Agent and privacy tech.",
+        "A network with ROFL Agent and privacy technology, free from scammers and bots.",
       className: "col-span-1 lg:col-span-1 row-span-1",
     },
     {
